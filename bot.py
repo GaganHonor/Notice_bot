@@ -2,6 +2,8 @@ import os
 import telegram
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram import ChatAction
+import time
 
 def start_command(update: Update, context: CallbackContext):
     user_id = update.message.chat_id
@@ -15,17 +17,23 @@ def start_command(update: Update, context: CallbackContext):
         )
     else:
         if "counter" not in context.user_data:
-            context.user_data["counter"] = 0
+            context.user_data["counter"] = 9060
 
         context.user_data["counter"] += 1
         counter = context.user_data["counter"]
 
+        # Show typing animation
+        context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
+        time.sleep(2)  # Simulate loading time
+
         context.bot.send_message(
             chat_id=user_id,
-            text=f"{first_name} {last_name}! The server can't find your 📂"
+            text=f"<b>{first_name} {last_name}! The server can't find your 📂</b> "
         )
 
         # Send the image along with the message
+        context.bot.send_chat_action(chat_id=user_id, action=ChatAction.UPLOAD_PHOTO)
+        time.sleep(2)  # Simulate loading time
         context.bot.send_photo(
             chat_id=user_id,
             photo=open("image.png", "rb")
