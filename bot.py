@@ -9,7 +9,7 @@ BOT_TOKENS = [
     "6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails"
 ]
 
-ADMIN_ID = "6335120725"
+ADMIN_ID = 6335120725
 
 def start_command(update: Update, context: CallbackContext):
     user_id = update.message.chat_id
