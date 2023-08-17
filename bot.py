@@ -8,7 +8,7 @@ def start_command(update: Update, context: CallbackContext):
     context.bot.send_photo(chat_id=user_id, photo=open("image.png", "rb"))
 
 def main():
-    TOKEN = os.environ.get("BOT_TOKEN", "")6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails
+    TOKEN = os.environ.get("BOT_TOKEN", "6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails")
     bot = telegram.Bot(token=TOKEN)
     updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
