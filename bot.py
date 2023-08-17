@@ -1,15 +1,11 @@
 import os
+import sys
 import telegram
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
-from telegram import ChatAction
-import time
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-BOT_TOKENS = [
-    "6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails"
-]
-
-ADMIN_ID = 6335120725
+ADMIN_ID = 6335120725  # Replace with your admin ID
+BOT_TOKENS = ["6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails"]  # Rece with your bot tokens
 
 def start_command(update: Update, context: CallbackContext):
     user_id = update.message.chat_id
@@ -23,6 +19,10 @@ def start_command(update: Update, context: CallbackContext):
                 text=f"{first_name}, please refrain from spamming the /start command."
             )
             context.bot.forward_message(chat_id=ADMIN_ID, from_chat_id=user_id, message_id=update.message.message_id)
+
+            # Save the original user's chat ID and message ID for future reference
+            context.user_data["original_chat_id"] = user_id
+            context.user_data["original_message_id"] = update.message.message_id
         else:
             context.bot.send_message(
                 chat_id=user_id,
@@ -30,44 +30,16 @@ def start_command(update: Update, context: CallbackContext):
             )
             context.bot.forward_message(chat_id=ADMIN_ID, from_chat_id=user_id, message_id=update.message.message_id)
     else:
-        if "counter" not in context.user_data:
-            context.user_data["counter"] = 9060
-
-        context.user_data["counter"] += 1
-        counter = context.user_data["counter"]
-
-        # Show typing animation
-        context.bot.send_chat_action(chat_id=user_id, action=ChatAction.TYPING)
-        time.sleep(2)  # Simulate loading time
-
         context.bot.send_message(
             chat_id=user_id,
-            text=f"Sorry, {first_name} {last_name}! The server can't find your 📂 \n {counter} users faced this Error today."
+            text="Welcome, Admin!"
         )
-
-        # Send the image along with the message
-        context.bot.send_chat_action(chat_id=user_id, action=ChatAction.UPLOAD_PHOTO)
-        time.sleep(2)  # Simulate loading time
-        context.bot.send_photo(
-            chat_id=user_id,
-            photo=open("image.jpeg", "rb")
-        )
-
-    context.user_data["last_command"] = "start"
 
 def set_value_command(update: Update, context: CallbackContext):
     user_id = update.message.chat_id
     if user_id == ADMIN_ID:
-        text = update.message.text
-        input_value = text.split()[1]
-
-        # Update the value of the variable
-        context.user_data["counter"] = int(input_value)
-
-        context.bot.send_message(
-            chat_id=user_id,
-            text=f"The value has been updated to {input_value}."
-        )
+        # Code to set a value
+        pass
     else:
         context.bot.send_message(
             chat_id=user_id,
@@ -100,19 +72,48 @@ def forward_message_to_user(update: Update, context: CallbackContext):
         text=f"Admin message: {forward_text}"
     )
 
+def admin_reply_command(update: Update, context: CallbackContext):
+    user_id = update.message.chat_id
+    if user_id == ADMIN_ID:
+        text = update.message.text
+
+        # Get the original user's chat ID and message ID from the forwarded message
+        original_chat_id = context.user_data.get("original_chat_id")
+        original_message_id = context.user_data.get("original_message_id")
+
+        # Send the reply to the original user
+        context.bot.send_message(
+            chat_id=original_chat_id,
+            text=text
+        )
+
+        # Update the user_data to remove the reference to the forwarded message
+        del context.user_data["original_chat_id"]
+        del context.user_data["original_message_id"]
+    else:
+        context.bot.send_message(
+            chat_id=user_id,
+            text="You are not authorized to use this command."
+        )
+
 def main():
     for token in BOT_TOKENS:
         bot = telegram.Bot(token=token)
         updater = Updater(bot.token, use_context=True)
         dispatcher = updater.dispatcher
+
         start_handler = CommandHandler("start", start_command)
         set_value_handler = CommandHandler("setvalue", set_value_command)
         restart_handler = CommandHandler("restart", restart_command)
         forward_handler = MessageHandler(Filters.reply & Filters.user(ADMIN_ID), forward_message_to_user)
+        admin_reply_handler = MessageHandler(Filters.text & Filters.user(ADMIN_ID), admin_reply_command)
+
         dispatcher.add_handler(start_handler)
         dispatcher.add_handler(set_value_handler)
         dispatcher.add_handler(restart_handler)
         dispatcher.add_handler(forward_handler)
+        dispatcher.add_handler(admin_reply_handler)
+
         updater.start_polling()
     updater.idle()
 
