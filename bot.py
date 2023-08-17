@@ -36,7 +36,7 @@ def start_command(update: Update, context: CallbackContext):
         time.sleep(2)  # Simulate loading time
         context.bot.send_photo(
             chat_id=user_id,
-            photo=open("image.png", "rb")
+            photo=open("image.jpeg", "rb")
         )
 
     context.user_data["last_command"] = "start"
