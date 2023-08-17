@@ -6,7 +6,7 @@ import os
 def start_command(update: Update, context: CallbackContext):
        user_id = update.message.chat_id
        context.bot.send_message(chat_id=user_id, text="Hi there!")
-       context.bot.send_photo(chat_id=user_id, photo=open("image.jpg", "rb"))
+       context.bot.send_photo(chat_id=user_id, photo=open("image.png", "rb"))
 
 def main():
        TOKEN = os.environ.get("6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails")  # Replace with your bot token
