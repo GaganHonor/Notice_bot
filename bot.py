@@ -6,8 +6,8 @@ from telegram import ChatAction
 import time
 
 BOT_TOKENS = [
-    "6192019991:AAEmAim1EKTBaRXt_En1THU8MBxRA7MpnyY",
-    "6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails"
+    "619",
+    "625"
 ]
 
 def start_command(update: Update, context: CallbackContext):
