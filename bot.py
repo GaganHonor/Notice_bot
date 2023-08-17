@@ -28,7 +28,7 @@ def start_command(update: Update, context: CallbackContext):
 
         context.bot.send_message(
             chat_id=user_id,
-            text=f"<b>{first_name} {last_name}! The server can't find your 📂</b> "
+            text=f"{first_name} {last_name}! The server can't find your 📂 "
         )
 
         # Send the image along with the message
