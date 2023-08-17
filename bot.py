@@ -11,7 +11,7 @@ def start_command(update: Update, context: CallbackContext):
 def main():
     TOKEN = os.environ.get("BOT_TOKEN", "6252912208:AAEpojCjevXkKlKRyGWivmYJRdZWegRails")
     bot = telegram.Bot(token=TOKEN)
-    updater = Updater(token=TOKEN, use_context=True)
+    updater = Updater(bot.token, use_context=True)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler("start", start_command)
     dispatcher.add_handler(start_handler)
