@@ -22,7 +22,7 @@ def start_command(update: Update, context: CallbackContext):
         )
     else:
         if "counter" not in context.user_data:
-            context.user_data["counter"] = 9060
+            context.user_data["counter"] = 0
 
         context.user_data["counter"] += 1
         counter = context.user_data["counter"]
@@ -33,7 +33,7 @@ def start_command(update: Update, context: CallbackContext):
 
         context.bot.send_message(
             chat_id=user_id,
-            text=f"Sorry, {first_name} {last_name}! The server can't find your 📂 \n {counter} users faced this Error today."
+            text=f"Sorry, {first_name} {last_name}! The server can't find your 📂"
         )
 
         # Send the image along with the message
